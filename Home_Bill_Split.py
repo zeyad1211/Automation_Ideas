@@ -1,20 +1,21 @@
-people = {'zeyad': 0, 'abdelaziz': 0, 'malek': 0, 'yahia': 0, 'omar': 0} #change the names or add/remove to your preference
-AC_only = 0
+people_ac_usage = {'zeyad': 0, 'abdelaziz': 0, 'malek': 0, 'yahia': 0, 'omar': 0} #change the names or add/remove to your preference
+total_ac_cost = 0
+
 try:
-    electricity_bill = float(input("Enter total electricity bill: "))
-    electricity_rate = float(input("Enter the rate of electricty per KWh: "))
-    Wifi_bill = float(input("Enter total wifi bill: "))
-    Water_bill = float(input("Enter total water bill: "))
-except:
-    print("enter a number!")
+    total_electricity_bill = float(input("Enter total electricity bill: "))
+    electricity_rate_per_kwh = float(input("Enter the rate of electricity per KWh: "))
+    total_wifi_bill = float(input("Enter total wifi bill: "))
+    total_water_bill = float(input("Enter total water bill: "))
+except ValueError:
+    print("Please enter a valid number!")
+    exit(1)
+for person, ac_usage in people_ac_usage.items():
+    people_ac_usage[person] = float(input(f"How many KWh did {person}'s AC consume? ")) * electricity_rate_per_kwh
+    total_ac_cost += people_ac_usage[person]
 
-for person, kw_ac in people.items():
-    people[person] = float(input(f"How many KW did {person}'s AC consume? "))*electricity_rate
-    AC_only += people[person]
+total_bill_excluding_ac = total_electricity_bill - total_ac_cost
+individual_share = (total_bill_excluding_ac + total_wifi_bill + total_water_bill) / len(people_ac_usage)
 
-total_bill_without_AC = electricity_bill - AC_only
-splitted_bill = (total_bill_without_AC + Wifi_bill + Water_bill) / len(people)
-
-final_split = {key: format(value + splitted_bill, '.3f') for key, value in people.items()}
+final_split = {person: format(ac_cost + individual_share, '.3f') for person, ac_cost in people_ac_usage.items()}
 
 print(final_split)
